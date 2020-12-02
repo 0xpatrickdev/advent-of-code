@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function getData() {
-  return fs.readFileSync('day-2.txt').toString().split('\n');
+  return fs.readFileSync('2020/day-2.txt').toString().split('\n');
 }
 
 function formatData(arr) {

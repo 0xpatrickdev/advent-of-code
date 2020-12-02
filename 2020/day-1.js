@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function getData() {
-  return fs.readFileSync('day-1.txt').toString().split('\n').map(x => parseInt(x));
+  return fs.readFileSync('2020/day-1.txt').toString().split('\n').map(x => parseInt(x));
 }
 
 function twoSum(nums, target) {
