@@ -11,60 +11,90 @@ function getTestData() {
   ]
 }
 
-function getCoords(directions) {
-  let coords = [];
+function getCoords(directions, targetCoordsForTotalSteps) {
+  let coordinateSet = new Set();
   let currX = 0;
   let currY = 0;
+  let totalSteps = 0;
 
   for (dir of directions) {
     const direction = dir.slice(0, 1);
     const distance = parseInt(dir.slice(1));
-    
+
     for (let i = 0; i < distance; i++) {
       switch (direction) {
         case 'R':
           currY++;
+          totalSteps++;
           break;
         case 'L':
           currY--;
+          totalSteps++;
           break;
         case 'U':
           currX++;
+          totalSteps++;
           break;
         case 'D':
           currX--;
+          totalSteps++;
           break;
       }
-      coords.push([currX, currY])
+      const coords = `${currX}, ${currY}`;
+      // using early return for partTwo where we only want total number of steps
+      if (targetCoordsForTotalSteps && coords === targetCoordsForTotalSteps) {
+        return totalSteps;
+      }
+      coordinateSet.add(coords);
     }
   }
 
-  return coords;
+  return coordinateSet;
 }
 
-function getPartOneAnswer() {
+function getMatches() {
   const data = getData();
-  
-  const lineOneCoords = getCoords(data[0]);  
-  const lineTwoCoords = getCoords(data[1]).map(x => String(x));
+  const lineOneCoords = getCoords(data[0]);
+  const lineTwoCoords = getCoords(data[1]);
 
-  let matches = [];
-  for (coords of lineOneCoords) {
-    if (lineTwoCoords.indexOf(String(coords)) > -1) {
-      matches.push(coords);
-    }
+  const matches = [...lineOneCoords].filter((x) => lineTwoCoords.has(x));
+
+  return {
+    matches,
+    lines: [data[0], data[1]],
   }
+}
+
+// return closest manhattan distance to (0,0) where the lines intersect
+function getPartOneAnswer() {
+  const { matches } = getMatches();
 
   let minDistance;
   for (match of matches) {
-    const distance = Math.abs(match[0]) + Math.abs(match[1]);
-    if(!minDistance || distance < minDistance) {
+    const [x, y] = match.split(',');
+    const distance = Math.abs(x) + Math.abs(y);
+    if (!minDistance || distance < minDistance) {
       minDistance = distance;
     }
-  }  
+  }
+
+  return minDistance;
+}
+
+// return combined shortest distance travelled where the linest intersect
+function getPartTwoAnswer() {
+  const { matches, lines } = getMatches();
+
+  let minDistance;
+  for (match of matches) {
+    const steps = getCoords(lines[0], match) + getCoords(lines[1], match);
+    if (!minDistance || steps < minDistance) {
+      minDistance = steps;
+    }
+  }
 
   return minDistance;
 }
 
 console.log('Part One', getPartOneAnswer());
-
+console.log('Part Two', getPartTwoAnswer());
