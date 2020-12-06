@@ -10,7 +10,7 @@ function twoSum(nums, target) {
   for (let i = 0; i < nums.length; i++) {
     let complement = target - nums[i];
     if (map[complement] > -1) {
-      return [nums[map[complement]], nums[i]];
+      return [complement, nums[i]];
     }
     map[nums[i]] = i;
   }

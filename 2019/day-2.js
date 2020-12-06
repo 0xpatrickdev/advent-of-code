@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function getData() {
-  return fs.readFileSync('2019/day-2.txt', {encoding: 'utf-8'}).split(',').map((x) => parseInt(x));
+  return fs.readFileSync('2019/day-2.txt','utf-8').split(',').map(Number);
 }
 
 function getPartOneAnswer(key1Value = 12, key2Value = 2) {
@@ -10,25 +10,23 @@ function getPartOneAnswer(key1Value = 12, key2Value = 2) {
   data[1] = key1Value;
   data[2] = key2Value;
 
-  for (let i = 0; i < data.length; i++) {
-    if ((i + 1) % 4 === 0) {
-      const opcode = data[i - 3];
-      const targetIndex = data[i];
-      switch (opcode) {
-        case 1:
-          // 1: add
-          data[targetIndex] = data[data[i - 2]] + data[data[i - 1]];
-          break;
-        case 2:
-          // 2: multiply
-          data[targetIndex] = data[data[i - 2]] * data[data[i - 1]];
-          break;
-        case 99:
-          // 99: end program now
-          return data[0];
-        default:
-          throw new Error('inavlid opcode');
-      }
+  for (let i = 3; i < data.length; i+= 4) {    
+    const opcode = data[i - 3];
+    const targetIndex = data[i];
+    switch (opcode) {
+      case 1:
+        // 1: add
+        data[targetIndex] = data[data[i - 2]] + data[data[i - 1]];
+        break;
+      case 2:
+        // 2: multiply
+        data[targetIndex] = data[data[i - 2]] * data[data[i - 1]];
+        break;
+      case 99:
+        // 99: end program now
+        return data[0];
+      default:
+        throw new Error('inavlid opcode');
     }
   }
   return data[0];

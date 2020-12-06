@@ -1,13 +1,7 @@
 const fs = require('fs');
-const path = require('path');
-
-function readFile(filepath) {
-  const _filepath = filepath || `${path.basename(__dirname)}/${path.basename(__filename).slice(0, -3)}.txt`;
-  return fs.readFileSync(_filepath, { encoding: 'utf-8' });
-}
 
 function getData() {
-  return readFile().split('\n');
+  return readFile('2020/day-3.txt', 'utf-8').split('\n');
 }
 
 function findNumberOfCollisions(rows, right, down, { debug = false }) {
@@ -18,15 +12,10 @@ function findNumberOfCollisions(rows, right, down, { debug = false }) {
   for (let i = down; i < rows.length; i += down) {
 
     // update x position by n(right). loop around if we've hit the end of the row
-    if (currentX + right >= rows[i].length) {
-      currentX = currentX + right - rows[i].length;
-    } else {
-      currentX = currentX + right;
-    }
+    currentX = (testX + right) % rows[i].length;
 
     // check for a collision with '#'. do nothing if '.'
-    const char = rows[i][currentX];
-    if (char === '#') treesEncountered++;
+    if (rows[i][currentX] === '#') treesEncountered++;
 
     // update row with result in debug mode
     if (debug) {
@@ -41,7 +30,7 @@ function findNumberOfCollisions(rows, right, down, { debug = false }) {
 }
 
 function getPartOneAnswer() {
-  return findNumberOfCollisions(getData(), 3, 1, { debug: true } );
+  return findNumberOfCollisions(getData().slice(0,100), 3, 1, { debug: true } );
 }
 
 function getPartTwoAnswer() {

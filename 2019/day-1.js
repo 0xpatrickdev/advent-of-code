@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function getData() {
-  return fs.readFileSync('2019/day-1.txt').toString().split('\n').map(x => parseInt(x));
+  return fs.readFileSync('2019/day-1.txt').toString().split('\n').map(Number);
 }
 
 // divide by 3, round down, subtract 2
