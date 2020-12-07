@@ -13,8 +13,9 @@ function getColorMap() {
     // remove period at end, iterate over color count pairs
     for (c of rest.slice(0, -1).split(', ')) {
       if (c !== 'no other bags') {
-        // -4 + trim() accounts for ' bag.' vs ' bags.'
-        children[c.slice(2, -4).trim()] = Number(c.split(' ')[0]);
+        const num = c.split(' ')[0];
+        // -4 + trim() accounts for ' bag' vs ' bags'
+        children[c.slice(num.length, -4).trim()] = Number(num);
       }
     }
     colorMap[color] = children;
