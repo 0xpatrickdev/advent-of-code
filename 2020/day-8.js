@@ -38,28 +38,27 @@ function getPartOneAnswer(instructions = getData()) {
   }
 }
 
-const flipOp = (op) => (op === 'nop' ? 'jmp' : 'nop');
-
 function getPartTwoAnswer() {
   const instructions = getData();
 
-  let prevPointer;
   // edit one instruction to find the program that ends on the last line
   for (i in instructions) {
-    const [operation, argument] = instructions[i].split(' ');
+    let instruction = instructions[i];
     // only update if 'nop' or 'jmp'
-    if (operation === 'acc') continue;
-    // update operation(s) in place
-    if (prevPointer) {
-      const [prevOp, prevArg] = instructions[prevPointer].split(' ');
-      instructions[prevPointer] = flipOp(prevOp) + ' ' + prevArg;
-    }
-    instructions[i] = flipOp(operation) + ' ' + argument;
-    prevPointer = i;
+    if (instruction.includes('acc')) continue;
 
+    // update jmp/nop operation in place
+    if (instruction.includes('jmp')) {
+      instructions[i] = instructions[i].replace('jmp', 'nop');
+    } else { 
+      instructions[i] = instructions[i].replace('nop', 'jmp');
+    }
     // check for when program ends on last line
     const { accumulator, endsLastLine } = getPartOneAnswer(instructions);
     if (endsLastLine) return accumulator;
+
+    // replace the updated instruction
+    instructions[i] = instruction;
   }
 }
 
