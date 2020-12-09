@@ -18,7 +18,7 @@ function hasTwoSum(nums, target) {
   return false;
 }
 
-// find the only number that's not equal to the sum of 
+// find the only number that's not equal to the sum of
 // 2 of the precending 25 (preambleLength) numbers
 function getPartOneAnswer(preambleLength = 25) {
   const data = getData();
@@ -55,5 +55,51 @@ function getPartTwoAnswer() {
   }
 }
 
+// decrease array from the front if the sum is greater
+// than the target (versus restarting at new pointer)
+function getPartTwoAnswerBetter() {
+  const target = getPartOneAnswer();
+  let preamble = [];
+
+  const sum = (nums) => nums.reduce((acc, curr) => acc + curr, 0);
+
+  for (num of getData()) {
+    if (sum(preamble) === target) {
+      const sorted = preamble.sort((a, b) => a - b);
+      return sorted[0] + sorted[preamble.length - 1];
+    }
+
+    preamble.push(num);
+
+    while (sum(preamble) > target) {
+      preamble.shift();
+    }
+  }
+}
+
+// store the sum instead of calculating it everytime
+function getPartTwoAnswerEvenBetter() {
+  const target = getPartOneAnswer();
+  let preamble = [];
+  let sum = 0;
+
+  for (num of getData()) {
+    if (sum === target) {
+      const sorted = preamble.sort((a, b) => a - b);
+      return sorted[0] + sorted[preamble.length - 1];
+    }
+    // add new number to current set + update sum
+    preamble.push(num);
+    sum += num;
+
+    // remvove number(s) from beginning of the array and update sum
+    while (sum > target) {
+      sum -= preamble.shift();
+    }
+  }
+}
+
 console.log('Part One', getPartOneAnswer());
 console.log('Part Two', getPartTwoAnswer());
+console.log('Part Two', getPartTwoAnswerBetter());
+console.log('Part Two', getPartTwoAnswerEvenBetter());
